@@ -1,0 +1,5 @@
+this code is responsible for converting and generating the ocr output from the whiteboard pdf
+
+uses document AI -- api by google
+
+this is non integrated code and works independently for generating text from pdfs / other docs
