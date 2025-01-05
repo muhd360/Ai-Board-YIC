@@ -1,4 +1,0 @@
-add the ml features independently here, without integration with the classroom interface.
-
-
-run the dependencies file according to your os and then run it.
