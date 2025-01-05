@@ -65,9 +65,18 @@ def translate_transcript(transcript, languages):
         translations[language] = translation
     return translations
 
+def save_to_file(filename, content):
+    """
+    Save the given content to a text file.
+    """
+    with open(filename, "w", encoding="utf-8") as file:
+        file.write(content)
+    print(f"Saved to {filename}")
+
 # Main function to run
 if __name__ == "__main__":
-    input_file = "path_to_your_video_file.mp4"  # Replace with your MP4 file path
+    input_file = "output/eng-s/small-eng.mp4"  # Replace with your MP4 file path
+    base_filename = os.path.splitext(os.path.basename(input_file))[0]
     mp3_file = "converted_audio.mp3"
 
     # Step 1: Convert MP4 to MP3
@@ -76,18 +85,20 @@ if __name__ == "__main__":
     # Step 2: Transcribe the MP3 file
     transcript = transcribe_long_audio(mp3_file, chunk_length_seconds=30)
 
-    # Step 3: Clean up the converted MP3 file
-    if os.path.exists(mp3_file):
-        os.remove(mp3_file)
+    # Step 3: Save the English transcript
+    eng_file = f"{base_filename}-eng.txt"
+    save_to_file(eng_file, transcript)
 
     # Step 4: Translate the transcript into Hindi, Marathi, and Gujarati
     languages = {"hi": "Hindi", "mr": "Marathi", "gu": "Gujarati"}
     translations = translate_transcript(transcript, languages.keys())
 
-    # Print the full transcript and translations
-    print("\n=== Full Transcript ===\n")
-    print(transcript)
-
-    print("\n=== Translations ===\n")
+    # Step 5: Save translations
     for lang_code, translation in translations.items():
-        print(f"{languages[lang_code]} Translation:\n{translation}\n")
+        lang_name = languages[lang_code].lower()
+        translation_file = f"{base_filename}-{lang_name}.txt"
+        save_to_file(translation_file, translation)
+
+    # Step 6: Clean up the converted MP3 file
+    if os.path.exists(mp3_file):
+        os.remove(mp3_file)
