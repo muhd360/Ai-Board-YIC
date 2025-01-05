@@ -1,6 +1,7 @@
 import whisper
 from pydub import AudioSegment
 from pydub.utils import make_chunks
+from googletrans import Translator
 import os
 
 def convert_mp4_to_mp3(mp4_path, mp3_path):
@@ -52,9 +53,21 @@ def transcribe_long_audio(file_path, chunk_length_seconds=30):
 
     return full_transcript
 
+def translate_transcript(transcript, languages):
+    """
+    Translate the transcript into the specified languages.
+    """
+    translator = Translator()
+    translations = {}
+    for language in languages:
+        print(f"Translating into {language}...")
+        translation = translator.translate(transcript, dest=language).text
+        translations[language] = translation
+    return translations
+
 # Main function to run
 if __name__ == "__main__":
-    input_file = "output/eng1/eng-btr.mp4"  # Replace with your MP4 file path
+    input_file = "path_to_your_video_file.mp4"  # Replace with your MP4 file path
     mp3_file = "converted_audio.mp3"
 
     # Step 1: Convert MP4 to MP3
@@ -67,6 +80,14 @@ if __name__ == "__main__":
     if os.path.exists(mp3_file):
         os.remove(mp3_file)
 
-    # Print the full transcript
+    # Step 4: Translate the transcript into Hindi, Marathi, and Gujarati
+    languages = {"hi": "Hindi", "mr": "Marathi", "gu": "Gujarati"}
+    translations = translate_transcript(transcript, languages.keys())
+
+    # Print the full transcript and translations
     print("\n=== Full Transcript ===\n")
     print(transcript)
+
+    print("\n=== Translations ===\n")
+    for lang_code, translation in translations.items():
+        print(f"{languages[lang_code]} Translation:\n{translation}\n")
