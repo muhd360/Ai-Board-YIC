@@ -1,5 +1,5 @@
 import os
-from moviepy.editor import VideoFileClip
+from moviepy.video.io.VideoFileClip import VideoFileClip
 from pydub import AudioSegment
 import speech_recognition as sr
 from transformers import pipeline
@@ -8,9 +8,12 @@ from googletrans import Translator
 from fpdf import FPDF
 import pytesseract
 
-# Initialize LLM and Translator
-summarizer = pipeline("summarization")
-translator = Translator()
+# Create output directory
+def create_output_folder():
+    output_folder = "output"
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
+    return output_folder
 
 # Step 1: Extract Audio and Generate Transcript
 def extract_audio(video_path, output_audio_path):
@@ -35,12 +38,11 @@ def summarize_text(text):
     summary = summarizer(text, max_length=150, min_length=30, do_sample=False)
     return summary[0]['summary_text']
 
-# Step 3: Process PDF Content (Whiteboard Content)
+# Step 3: Process PDF Content
 def process_pdf_content(pdf_path):
     text = ""
-    images = pytesseract.image_to_pdf_or_hocr(pdf_path, extension='pdf')
-    for page_text in pytesseract.image_to_string(pdf_path, extension='pdf').split('\n\n'):
-        text += page_text
+    with open(pdf_path, 'rb') as pdf_file:
+        text = pytesseract.image_to_string(pdf_file)
     return text
 
 # Step 4: Multilingual Support
@@ -52,61 +54,60 @@ def translate_text(text, target_languages):
 
 # Main Workflow
 def process_inputs(video_path, pdf_path):
-    # Define output paths
-    audio_path = "output_audio.mp3"
+    output_folder = create_output_folder()
 
-    # Step 1: Extract audio and transcript
+    audio_path = os.path.join(output_folder, "output_audio.mp3")
+    transcript_path = os.path.join(output_folder, "transcript.txt")
+    transcript_summary_path = os.path.join(output_folder, "transcript_summary.txt")
+    whiteboard_text_path = os.path.join(output_folder, "whiteboard_text.txt")
+    whiteboard_summary_path = os.path.join(output_folder, "whiteboard_summary.txt")
+    translations_path = os.path.join(output_folder, "translations.txt")
+
     print("Extracting audio...")
     extract_audio(video_path, audio_path)
     print("Generating transcript...")
     transcript = generate_transcript(audio_path)
+    with open(transcript_path, 'w') as file:
+        file.write(transcript)
 
-    # Step 2: Summarize transcript
     print("Summarizing transcript...")
     transcript_summary = summarize_text(transcript)
+    with open(transcript_summary_path, 'w') as file:
+        file.write(transcript_summary)
 
-    # Step 3: Process PDF content
-    print("Processing whiteboard content from PDF...")
+    print("Processing PDF content...")
     whiteboard_text = process_pdf_content(pdf_path)
     whiteboard_summary = summarize_text(whiteboard_text)
+    with open(whiteboard_text_path, 'w') as file:
+        file.write(whiteboard_text)
+    with open(whiteboard_summary_path, 'w') as file:
+        file.write(whiteboard_summary)
 
-    # Step 4: Detect language and translate
-    print("Detecting language...")
+    print("Detecting language and translating...")
     original_language = detect(transcript)
-    translations = {}
-
     if original_language != "en":
-        print(f"Translating transcript from {original_language} to English...")
         transcript = translator.translate(transcript, dest="en").text
 
-    print("Translating content to multiple languages...")
-    target_languages = ["hi", "mr", "gu"]  # Hindi, Marathi, Gujarati
-    translations['transcript'] = translate_text(transcript, target_languages)
-    translations['summary'] = translate_text(transcript_summary, target_languages)
-    translations['whiteboard'] = translate_text(whiteboard_summary, target_languages)
-
-    # Output results
-    print("Processing complete.")
-    return {
-        "transcript": transcript,
-        "transcript_summary": transcript_summary,
-        "whiteboard_text": whiteboard_text,
-        "whiteboard_summary": whiteboard_summary,
-        "translations": translations
+    target_languages = ["hi", "mr", "gu"]
+    translations = {
+        "transcript": translate_text(transcript, target_languages),
+        "summary": translate_text(transcript_summary, target_languages),
+        "whiteboard": translate_text(whiteboard_summary, target_languages),
     }
 
-# Example Usage
+    with open(translations_path, 'w') as file:
+        for key, lang_translations in translations.items():
+            file.write(f"\n=== {key.upper()} TRANSLATIONS ===\n")
+            for lang, text in lang_translations.items():
+                file.write(f"\nLanguage: {lang}\n{text}\n")
+
+    print("Processing complete. Results saved to output folder.")
+
 if __name__ == "__main__":
+    print("Loading summarizer...")
+    summarizer = pipeline("summarization", model="sshleifer/distilbart-cnn-12-6")
+    translator = Translator()
+
     video_file = "input_video.mp4"  # Replace with your video file path
     pdf_file = "whiteboard.pdf"  # Replace with your PDF file path
-    results = process_inputs(video_file, pdf_file)
-
-    print("Transcript:", results["transcript"])
-    print("Transcript Summary:", results["transcript_summary"])
-    print("Whiteboard Content:", results["whiteboard_text"])
-    print("Whiteboard Summary:", results["whiteboard_summary"])
-    print("Translations:", results["translations"])
-
-
-#pip install moviepy pydub speechrecognition transformers langdetect googletrans==4.0.0-rc1 fpdf pytesseract
-#use the aboce command to install all the dependencies
+    process_inputs(video_file, pdf_file)
