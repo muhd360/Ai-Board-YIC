@@ -1,0 +1,149 @@
+/* Global Dark Mode Styles */
+body.dark-mode {
+    background-color: #121212;
+    color: #ffffff;
+  }
+  
+  body.dark-mode .resource-page {
+    background-color: #121212;
+    color: #ffffff;
+  }
+  
+  /* General Styles */
+  .resource-page {
+    padding: 20px;
+    text-align: center;
+    width: 100%;
+    margin: 0 auto;
+    min-height: 100vh; /* Ensure it covers the full height */
+  }
+  
+  .resource-page h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: inherit;
+  }
+  
+  /* Video Section */
+  .video-section {
+    margin-bottom: 30px;
+  }
+  
+  .video-section video {
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Buttons */
+  .button-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+  
+  .toggle-button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .toggle-button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+  }
+  
+  /* PDF Container */
+  .pdf-container {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+    width: 100%;
+    height: 80vh;
+  }
+  
+  .pdf-section {
+    flex: 1;
+    text-align: left;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    height: 100%;
+    transition: transform 0.3s ease;
+  }
+  
+  body.dark-mode .pdf-section {
+    background-color: #1e1e1e;
+    color: #ffffff;
+  }
+  
+  .pdf-section h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: inherit;
+  }
+  
+  .pdf-section iframe {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+  }
+  
+  /* Loading Spinner */
+  .loading-spinner {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  /* Dark Mode Toggle */
+  .dark-mode-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+  }
+  
+  .dark-mode-toggle:hover {
+    transform: scale(1.1);
+  }
+  
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 5px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+  
+  body.dark-mode ::-webkit-scrollbar-track {
+    background: #1e1e1e;
+  }
+  
+  body.dark-mode ::-webkit-scrollbar-thumb {
+    background: #555;
+  }
+  
+  body.dark-mode ::-webkit-scrollbar-thumb:hover {
+    background: #777;
+  }

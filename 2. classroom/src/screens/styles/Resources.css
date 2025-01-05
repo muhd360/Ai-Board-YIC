@@ -1,0 +1,107 @@
+/* General Page Styling */
+.resources-page {
+    padding: 20px;
+    background: #f9f9f9;
+    font-family: "Poppins";
+  }
+  
+  .resources-title {
+    text-align: center;
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  /* Card Container */
+  .resources-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    padding: 0 20px;
+  }
+
+  @media (max-width: 768px) {
+    .resources-container {
+      grid-template-columns: repeat(2, 1fr); /* 2 cards per row on medium screens */
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .resources-container {
+      grid-template-columns: repeat(1, 1fr); /* 1 card per row on small screens */
+    }
+  }
+  
+  /* Resource Card */
+  .resource-card {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s, box-shadow 0.3s;
+    text-align: center;
+    padding: 20px;
+    min-height: 350px; 
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    max-width: 400px;
+    align-items: center;
+    margin-left: 5vh;
+
+  }
+  
+  .resource-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Card Content */
+  .resource-card-title {
+    font-size: 1.8rem; /* Bigger font size for the title */
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+  }
+
+  .resource-card-subtitle {
+    font-size: 1.2rem; /* New subtitle size */
+    color: #555;
+    margin-bottom: 10px;
+  }
+  
+  .resource-card-description {
+    font-size: 1rem;
+    color: #666;
+    margin: 10px 0;
+  }
+
+  .resource-card-additional-info {
+    font-size: 0.9rem;
+    color: #888;
+    margin: 10px 0;
+  }
+  
+  .resource-card-icon {
+    font-size: 5rem;
+    color: #007bff;
+    margin-bottom: 10px;
+  }
+  
+/* Button Styling */
+.resource-card-btn {
+    display: inline-block;
+    padding: 12px 25px;
+    font-size: 1.1rem; /* Slightly larger button */
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: auto; /* Push the button to the bottom */
+  }
+  
+  .resource-card-btn:hover {
+    background-color: #0056b3;
+  }
+  

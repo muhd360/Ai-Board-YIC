@@ -1,0 +1,90 @@
+.dashboard {
+  font-family: 'Poppins';
+  padding: 24px;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+.dashboard__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  font-family: "Poppins", sans-serif;
+  padding: 16px 24px; /* Add padding for better spacing */
+  background: linear-gradient(135deg, #1A8EFD, #3A9EFF, #6BB2FF, #9ACBFF);
+  color: white; /* White text for better contrast */
+  border-radius: 12px; /* Rounded corners */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effect */
+}
+
+.dashboard__header:hover {
+  transform: translateY(-2px); /* Slight lift on hover */
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3); /* Enhanced shadow on hover */
+}
+
+.dashboard__title {
+  font-size: 28px; /* Larger font size */
+  font-weight: 600; /* Semi-bold for emphasis */
+  letter-spacing: -0.5px; /* Slight letter spacing for better readability */
+  margin: 0; /* Remove default margin */
+}
+
+.dashboard__search {
+  background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white background */
+  border-radius: 8px; /* Rounded corners for the search bar */
+  border: none; /* Remove default border */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for the search bar */
+}
+
+.dashboard__search .MuiOutlinedInput-root {
+  border-radius: 8px; /* Ensure the input field has rounded corners */
+}
+
+.dashboard__search .MuiOutlinedInput-input {
+  padding: 10px 14px; /* Adjust padding for better input field size */
+  font-family: "Poppins", sans-serif; /* Consistent font */
+}
+
+.dashboard__search .MuiInputLabel-outlined {
+  transform: translate(14px, 14px) scale(1); /* Adjust label position */
+  font-family: "Poppins", sans-serif; /* Consistent font */
+}
+
+.dashboard__search .MuiInputLabel-outlined.MuiInputLabel-shrink {
+  transform: translate(14px, -6px) scale(0.75); /* Adjust label position when shrunk */
+}
+
+.dashboard__loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.dashboard__error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.dashboard__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 50vh;
+  text-align: center;
+}
+
+.dashboard__emptyText {
+  margin-bottom: 16px;
+  color: #666666;
+}
+
+.dashboard__classContainer {
+  margin-top: 16px;
+  gap: 10vh;
+}
