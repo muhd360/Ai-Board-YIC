@@ -60,21 +60,21 @@ def translate_transcript(transcript, languages):
     """
     translator = Translator()
     translations = {}
-    for language in languages:
-        print(f"Translating into {language}...")
-        translation = translator.translate(transcript, dest=language).text
-        translations[language] = translation
+    for lang_code in languages:
+        print(f"Translating into {languages[lang_code]}...")
+        translation = translator.translate(transcript, dest=lang_code).text
+        translations[lang_code] = translation
     return translations
 
-def save_to_pdf(filename, content):
+def save_to_pdf(filename, content, font_path="NotoSans-Regular.ttf"):
     """
     Save the given content to a PDF file.
     """
     pdf = FPDF()
     pdf.set_auto_page_break(auto=True, margin=15)
     pdf.add_page()
-    pdf.add_font('DejaVu', '', 'DejaVuSans.ttf', uni=True)  # Ensure proper rendering of UTF-8 text
-    pdf.set_font("DejaVu", size=12)
+    pdf.add_font('CustomFont', '', font_path, uni=True)  # Ensure proper rendering of UTF-8 text
+    pdf.set_font("CustomFont", size=12)
 
     # Split content into lines to prevent text from overflowing the page
     lines = content.split("\n")
@@ -88,7 +88,10 @@ def save_to_pdf(filename, content):
 if __name__ == "__main__":
     input_file = "video/eng-s/small-eng.mp4"  # Replace with your MP4 file path
     base_filename = os.path.splitext(os.path.basename(input_file))[0]
-    mp3_file = "converted_audio.mp3"
+    output_dir = os.path.join(os.getcwd(), base_filename)
+    os.makedirs(output_dir, exist_ok=True)
+
+    mp3_file = os.path.join(output_dir, "converted_audio.mp3")
 
     # Step 1: Convert MP4 to MP3
     convert_mp4_to_mp3(input_file, mp3_file)
@@ -97,23 +100,56 @@ if __name__ == "__main__":
     transcript = transcribe_long_audio(mp3_file, chunk_length_seconds=30)
 
     # Step 3: Save the English transcript
-    eng_file = f"{base_filename}-eng.pdf"
+    eng_file = os.path.join(output_dir, f"{base_filename}-eng.pdf")
     save_to_pdf(eng_file, transcript)
 
-    # Step 4: Translate the transcript into Hindi, Marathi, and Gujarati
-    languages = {"hi": "Hindi", "mr": "Marathi", "gu": "Gujarati"}
-    translations = translate_transcript(transcript, languages.keys())
+    # Step 4: Translate the transcript into multiple languages
+    languages = {
+        'hi': 'Hindi',
+        'mr': 'Marathi',
+        'gu': 'Gujarati',
+        'bn': 'Bengali',
+        'te': 'Telugu',
+        'ta': 'Tamil',
+        'ur': 'Urdu',
+        'kn': 'Kannada',
+        'ml': 'Malayalam',
+        'pa': 'Punjabi',
+        'es': 'Spanish',
+        'fr': 'French',
+        'de': 'German',
+        'it': 'Italian',
+        'ja': 'Japanese',
+        'zh-cn': 'Chinese (Simplified)',
+        'ar': 'Arabic'
+    }
+
+    # Map fonts for specific languages
+    font_map = {
+        'hi': "NotoSansDevanagari-Regular.ttf",
+        'mr': "NotoSansDevanagari-Regular.ttf",
+        'gu': "NotoSansGujarati-Regular.ttf",
+        'bn': "NotoSansBengali-Regular.ttf",
+        'te': "NotoSansTelugu-Regular.ttf",
+        'ta': "NotoSansTamil-Regular.ttf",
+        'ur': "NotoSansArabic-Regular.ttf",
+        'kn': "NotoSansKannada-Regular.ttf",
+        'ml': "NotoSansMalayalam-Regular.ttf",
+        'pa': "NotoSansGurmukhi-Regular.ttf",
+        'ja': "NotoSansJP-Regular.ttf",
+        'zh-cn': "NotoSansSC-Regular.ttf",
+        'ar': "NotoSansArabic-Regular.ttf"
+    }
+
+    translations = translate_transcript(transcript, languages)
 
     # Step 5: Save translations
-    for lang_code, translation in translations.items():
+    for lang_code, language, translation in translations.items():
         lang_name = languages[lang_code].lower()
-        translation_file = f"{base_filename}-{lang_name}.pdf"
-        save_to_pdf(translation_file, translation)
+        font_path = font_map.get(lang_code, "NotoSans-Regular.ttf")  # Default font
+        translation_file = os.path.join(output_dir, f"{base_filename}-{language}.pdf")
+        save_to_pdf(translation_file, translation, font_path=font_path)
 
     # Step 6: Clean up the converted MP3 file
     if os.path.exists(mp3_file):
         os.remove(mp3_file)
-
-
-
-#this converts video to audio chunks followed by transcript in eng followed by transcripts in Hindi, Marathi, and Gujrati in pdf format
