@@ -86,7 +86,7 @@ def save_to_pdf(filename, content, font_path="NotoSans-Regular.ttf"):
 
 # Main function to run
 if __name__ == "__main__":
-    input_file = "video/eng-s/small-eng.mp4"  # Replace with your MP4 file path
+    input_file = "old nonsense/video/eng-s/small-eng.mp4"  # Replace with your MP4 file path
     base_filename = os.path.splitext(os.path.basename(input_file))[0]
     output_dir = os.path.join(os.getcwd(), base_filename)
     os.makedirs(output_dir, exist_ok=True)
@@ -144,10 +144,10 @@ if __name__ == "__main__":
     translations = translate_transcript(transcript, languages)
 
     # Step 5: Save translations
-    for lang_code, language, translation in translations.items():
+    for lang_code, translation in translations.items():
         lang_name = languages[lang_code].lower()
         font_path = font_map.get(lang_code, "NotoSans-Regular.ttf")  # Default font
-        translation_file = os.path.join(output_dir, f"{base_filename}-{language}.pdf")
+        translation_file = os.path.join(output_dir, f"{base_filename}-{lang_name}.pdf")
         save_to_pdf(translation_file, translation, font_path=font_path)
 
     # Step 6: Clean up the converted MP3 file
