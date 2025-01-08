@@ -1,0 +1,7 @@
+SpeechRecognition
+googletrans
+multilingual-pdf2text
+pydub
+googletrans==4.0.0-rc1
+fpdf
+PyMuPDF
