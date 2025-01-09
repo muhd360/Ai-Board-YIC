@@ -6,6 +6,8 @@ from fpdf import FPDF
 from googletrans import Translator
 import speech_recognition as sr
 import subprocess
+from alternative_method import MultilingualPDFGenerator
+from azure_translator import Services
 
 def find_mp4(folder_path):
     """
@@ -139,7 +141,19 @@ if __name__ == "__main__":
 
     # Step 5: Save translations
     #done alternative_method.py
+    translator = Services()
+    font_dir = "/home/muhd/Ai-Board-YIC/3. ml features/2. Video To Transcript with Trl"  # Update this path
+    y=MultilingualPDFGenerator(font_dir)
+    initial_translation = translator.translate_transcript(transcript)
+    translations = translator.multilingual(initial_translation)
     
+    # Set up paths
+    output_dir = os.path.join(os.getcwd(), "output")
+    
+    # Create and generate PDFs
+    
+    y.create_pdfs(translations, output_dir)
+
 
 
     # Step 6: Clean up the converted MP3 file
