@@ -8,7 +8,7 @@ class Services:
     def translate_transcript(self,text):
 
         # Add your key and endpoint
-        key = "Fm2xe89lDVzJfwO4RnMyksPlbHqZTlg75jS7yvokRA0oheMwOvaYJQQJ99BAACYeBjFXJ3w3AAAbACOGEN1G"
+        key = "Fm2xe89lDfwO4RnMyksPlbHqZT1G"
         endpoint = "https://api.cognitive.microsofttranslator.com/"
 
         # location, also known as region.
