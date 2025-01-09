@@ -6,6 +6,8 @@ from fpdf import FPDF
 from googletrans import Translator
 import speech_recognition as sr
 import subprocess
+from alternative_method import MultilingualPDFGenerator
+from azure_translator import Services
 
 def find_mp4(folder_path):
     """
@@ -107,23 +109,9 @@ def translate_transcript(transcript, languages):
         translations[lang_code] = translation
     return translations
 
-def save_to_pdf(filename, content, font_path="NotoSans-Regular.ttf"):
-    """
-    Save the given content to a PDF file.
-    """
-    pdf = FPDF()
-    pdf.set_auto_page_break(auto=True, margin=15)
-    pdf.add_page()
-    pdf.add_font('CustomFont', '', font_path, uni=True)  # Ensure proper rendering of UTF-8 text
-    pdf.set_font("CustomFont", size=12)
-
-    # Split content into lines to prevent text from overflowing the page
-    lines = content.split("\n")
-    for line in lines:
-        pdf.multi_cell(0, 10, line)
-
-    pdf.output(filename)
-    print(f"Saved to {filename}")
+def save_to_pdf(file_path, content):
+    with open(file_path, "w", encoding="utf-8") as f:
+        f.write(content)
 
 # Main function to run
 if __name__ == "__main__":
@@ -138,58 +126,35 @@ if __name__ == "__main__":
     convert_mp4_to_mp3(input_file, mp3_file)
 
     # Step 2: Transcribe the MP3 file
-    transcript = transcribe_audio(mp3_file, chunk_length_seconds=30)
+    #async process->very slow->use threading->transcript is text
+    transcript = transcribe_audio(mp3_file, chunk_length_seconds=180)
+
 
     # Step 3: Save the English transcript
+
     eng_file = os.path.join(output_dir, f"{base_filename}-eng.pdf")
     save_to_pdf(eng_file, transcript)
 
     # Step 4: Translate the transcript into multiple languages
-    languages = {
-        'hi': 'Hindi',
-        'mr': 'Marathi',
-        'gu': 'Gujarati',
-        'bn': 'Bengali',
-        'te': 'Telugu',
-        'ta': 'Tamil',
-        'ur': 'Urdu',
-        'kn': 'Kannada',
-        'ml': 'Malayalam',
-        'pa': 'Punjabi',
-        'es': 'Spanish',
-        'fr': 'French',
-        'de': 'German',
-        'it': 'Italian',
-        'ja': 'Japanese',
-        'zh-cn': 'Chinese (Simplified)',
-        'ar': 'Arabic'
-    }
+    #done
 
-    # Map fonts for specific languages
-    font_map = {
-        'hi': "NotoSansDevanagari-Regular.ttf",
-        'mr': "NotoSansDevanagari-Regular.ttf",
-        'gu': "NotoSansGujarati-Regular.ttf",
-        'bn': "NotoSansBengali-Regular.ttf",
-        'te': "NotoSansTelugu-Regular.ttf",
-        'ta': "NotoSansTamil-Regular.ttf",
-        'ur': "NotoSansArabic-Regular.ttf",
-        'kn': "NotoSansKannada-Regular.ttf",
-        'ml': "NotoSansMalayalam-Regular.ttf",
-        'pa': "NotoSansGurmukhi-Regular.ttf",
-        'ja': "NotoSansJP-Regular.ttf",
-        'zh-cn': "NotoSansSC-Regular.ttf",
-        'ar': "NotoSansArabic-Regular.ttf"
-    }
-
-    translations = translate_transcript(transcript, languages)
 
     # Step 5: Save translations
-    for lang_code, translation in translations.items():
-        lang_name = languages[lang_code].lower()
-        font_path = font_map.get(lang_code, "NotoSans-Regular.ttf")  # Default font
-        translation_file = os.path.join(output_dir, f"{base_filename}-{lang_name}.pdf")
-        save_to_pdf(translation_file, translation, font_path=font_path)
+    #done alternative_method.py
+    translator = Services()
+    font_dir = "/home/muhd/Ai-Board-YIC/3. ml features/2. Video To Transcript with Trl"  # Update this path
+    y=MultilingualPDFGenerator(font_dir)
+    initial_translation = translator.translate_transcript(transcript)
+    translations = translator.multilingual(initial_translation)
+    
+    # Set up paths
+    output_dir = os.path.join(os.getcwd(), "output")
+    
+    # Create and generate PDFs
+    
+    y.create_pdfs(translations, output_dir)
+
+
 
     # Step 6: Clean up the converted MP3 file
     if os.path.exists(mp3_file):
