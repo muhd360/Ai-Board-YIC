@@ -1,3 +1,5 @@
+
+MADE SOME CHANGES 
 the stylus works on the basis of RF communication
 
 make sure of the following while testing the stylus:-
